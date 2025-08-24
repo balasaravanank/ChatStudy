@@ -78,70 +78,53 @@ Client-server chat applications are foundational to real-time communication over
 import socket
 
 def client_program():
+    host = '127.0.0.1'
+    port = 8000
 
-host='127.0.0.1'
+    client_socket = socket.socket()  # create client socket
+    client_socket.connect((host, port))
 
-port 8000
+    while True:
+        message = input(" -> ")
+        client_socket.send(message.encode())
+        data = client_socket.recv(1024).decode()
+        print('Received from server:', data)
 
-client socket socket.socket()
+    client_socket.close()
 
-client_socket.connect((host, port))
+if __name__ == '__main__':
+    client_program()
 
-while True:
-
-message input("->")
-
-client_socket.send(message.encode())
-
-data client_socket.recv(1024).decode() print('Received from server:', data).
-
-client_socket.close()
-
-If_name'main':
-
-client_program()
 ~~~
 ## server.py
 ~~~
 import socket
 
 def server_program():
+    host = '127.0.0.1'  # Localhost
+    port = 8000
 
-host='127.0.0.1' # or socket.gethostname()
+    server_socket = socket.socket()  # create server socket
+    server_socket.bind((host, port))
+    server_socket.listen(1)
 
-port 8000
+    print(f"Server listening on {host}:{port}")
+    conn, address = server_socket.accept()
+    print("Connection from:", address)
 
-server_socket = socket.socket()
+    while True:
+        data = conn.recv(1024).decode()
+        if not data:
+            break
+        print("From client:", data)
+        message = input(" -> ")
+        conn.send(message.encode())
 
-server_socket.bind((host, port))
+    conn.close()
 
-server_socket.listen(1)
+if __name__ == '__main__':
+    server_program()
 
-print(f"Server listening on (host): (port)")
-
-conn, address server_socket.accept()
-
-print("Connection from:", address)
-
-while True:
-
-data conn.recv(1024).decode()
-
-if not data:
-
-break
-
-print("from connected user:", data)
-
-message input(" -> ")
-
-conn.send(message.encode())
-
-conn.close()
-
-if_name_ '_main__':
-
-server_program()
 ~~~
 ## Output:
 ## client.py
